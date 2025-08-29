@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متابعة تقدم الطالب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                        'sans': ['Cairo', 'sans-serif']
+                    },
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#7C3AED',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        body { 
+            font-family: 'Cairo', sans-serif;
+        }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-up { animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .hover-scale:hover { transform: scale(1.02); }
+        
+        /* تحسين عرض النصوص العربية */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+        }
+        
+        p, span, div, input, textarea, select, button {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        /* تحسين وزن الخط للعناوين */
+        .font-bold {
+            font-weight: 700;
+        }
+        
+        .font-semibold {
+            font-weight: 600;
+        }
+        
+        .font-medium {
+            font-weight: 500;
+        }
+        
+        .font-normal {
+            font-weight: 400;
+        }
+        
+        .font-light {
+            font-weight: 300;
+        }
+    </style>
+<link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#5D5CDE">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-purple-900 min-h-screen font-cairo">
+    <!-- الهيدر -->
+    <header class="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- الشعار والعنوان -->
+                <div class="flex items-center space-x-reverse space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-white">متابعة تقدم الطالب</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">نظام إدارة ومتابعة الطلاب</p>
+                    </div>
+                </div>
+
+                <!-- شريط التنقل الرئيسي للشاشات الكبيرة -->
+                <nav class="hidden lg:flex items-center space-x-reverse space-x-8">
+                    <div class="relative group">
+                        <button class="flex items-center space-x-reverse space-x-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                            <span>الطلاب</span>
+                            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-2">
+                                <a href="#" onclick="openAddStudentModal()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    <span>إضافة طالب جديد</span>
+                                </a>
+                                <a href="#" onclick="scrollToStudentsList()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>عرض قائمة الطلاب</span>
+                                </a>
+                                <div class="border-t border-gray-200 dark:border-gray-600 my-2"></div>
+                                <a href="#" onclick="showTopStudents()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                    </svg>
+                                    <span>الطلاب المتميزون</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <button class="flex items-center space-x-reverse space-x-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
+                            <span>التقييمات</span>
+                            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-2">
+                                <a href="#" onclick="openEvaluateModal()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    <span>إضافة تقييم جديد</span>
+                                </a>
+                                <a href="#" onclick="showTodayEvaluations()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>تقييمات اليوم</span>
+                                </a>
+                                <a href="#" onclick="showRecentEvaluations()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>التقييمات الأخيرة</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <button class="flex items-center space-x-reverse space-x-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            <span>التقارير</span>
+                            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-2">
+                                <a href="#" onclick="showStats()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>الإحصائيات العامة</span>
+                                </a>
+                                <a href="#" onclick="generatePerformanceReport()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <span>تقرير الأداء</span>
+                                </a>
+                                <a href="#" onclick="exportAllData()" class="flex items-center space-x-reverse space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <span>تصدير البيانات</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- الجانب الأيمن -->
+                <div class="flex items-center space-x-reverse space-x-3">
+                    <!-- مؤشر التاريخ والوقت -->
+                    <div class="hidden md:flex items-center space-x-reverse space-x-2 px-3 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span id="currentDate" class="text-sm text-gray-600 dark:text-gray-300 font-medium"></span>
+                    </div>
+
+                    <!-- أزرار سريعة -->
+                    <div class="flex items-center space-x-reverse space-x-2">
+                        <button onclick="openAddStudentModal()" class="p-2 rounded-lg bg-primary hover:bg-purple-700 text-white transition-colors shadow-md hover:shadow-lg" title="إضافة طالب">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                        </button>
+                        
+                        <button onclick="showNotificationsPanel()" class="relative p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="الإشعارات">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5-5 5-5h-5m-5 10H5l5-5-5-5h5m8 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center hidden" id="notificationBadge">0</span>
+                        </button>
+
+                        <button onclick="showSettings()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="الإعدادات">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- قائمة الجوال -->
+                    <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- قائمة الجوال -->
+        <div id="mobileMenu" class="lg:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 hidden">
+            <div class="px-4 py-3 space-y-2">
+                <div class="border-b border-gray-200 dark:border-gray-700 pb-3 mb-3">
+                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">الطلاب</h3>
+                    <div class="mt-2 space-y-1">
+                        <button onclick="closeMobileMenu(); openAddStudentModal();" class="w-full flex items-center space-x-reverse space-x-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-right">
+                            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            <span>إضافة طالب جديد</span>
+                        </button>
+                        <button onclick="closeMobileMenu(); scrollToStudentsList();" class="w-full flex items-center space-x-reverse space-x-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-right">
+                            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>عرض قائمة الطلاب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="border-b border-gray-200 dark:border-gray-700 pb-3 mb-3">
+                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">التقييمات</h3>
+                    <div class="mt-2 space-y-1">
+                        <button onclick="closeMobileMenu(); openEvaluateModal();" class="w-full flex items-center space-x-reverse space-x-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-right">
+                            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            <span>إضافة تقييم جديد</span>
+                        </button>
+                        <button onclick="closeMobileMenu(); showTodayEvaluations();" class="w-full flex items-center space-x-reverse space-x-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-right">
+                            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>تقييمات اليوم</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">التقارير</h3>
+                    <div class="mt-2 space-y-1">
+                        <button onclick="closeMobileMenu(); showStats();" class="w-full flex items-center space-x-reverse space-x-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-right">
+                            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>الإحصائيات العامة</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- قسم الإحصائيات السريعة -->
+        <section class="fade-in mb-6">
+            <div class="mb-4">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">نظرة عامة</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400">إحصائيات سريعة عن حالة النظام</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-100 dark:border-gray-700 hover-scale">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">إجمالي الطلاب</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white" id="totalStudents">0</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">طالب وطالبة</p>
+                        </div>
+                        <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center">
+                            <svg class="w-7 h-7 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-100 dark:border-gray-700 hover-scale">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">تقييمات اليوم</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white" id="todayEvaluations">0</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">تقييم جديد</p>
+                        </div>
+                        <div class="w-14 h-14 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
+                            <svg class="w-7 h-7 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-100 dark:border-gray-700 hover-scale">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">طلاب متميزون</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white" id="excellentStudents">0</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">أداء ممتاز</p>
+                        </div>
+                        <div class="w-14 h-14 bg-yellow-100 dark:bg-yellow-900 rounded-xl flex items-center justify-center">
+                            <svg class="w-7 h-7 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-100 dark:border-gray-700 hover-scale">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">يحتاجون متابعة</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white" id="needsAttention">0</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">متابعة خاصة</p>
+                        </div>
+                        <div class="w-14 h-14 bg-red-100 dark:bg-red-900 rounded-xl flex items-center justify-center">
+                            <svg class="w-7 h-7 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.232 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الإجراءات السريعة -->
+        <section class="fade-in mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">الإجراءات السريعة</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">إدارة الطلاب والتقييمات</p>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- الأزرار الرئيسية -->
+                        <div class="space-y-4">
+                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">إدارة النظام</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <button onclick="openAddStudentModal()" class="group bg-primary hover:bg-purple-700 text-white p-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-reverse space-x-3 hover:shadow-lg hover:scale-105">
+                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    <span>إضافة طالب</span>
+                                </button>
+                                <button onclick="openEvaluateModal()" class="group bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-reverse space-x-3 hover:shadow-lg hover:scale-105">
+                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                    </svg>
+                                    <span>تقييم طالب</span>
+                                </button>
+                                <button onclick="showStats()" class="group bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-reverse space-x-3 hover:shadow-lg hover:scale-105">
+                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>الإحصائيات</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- أدوات البحث والتصفية -->
+                        <div class="space-y-4">
+                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">البحث والتصفية</h4>
+                            <div class="space-y-3">
+                                <div class="relative">
+                                    <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    <input type="text" id="searchStudent" placeholder="البحث عن طالب..." class="w-full pr-10 pl-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white text-base transition-all">
+                                </div>
+                                <select id="filterGrade" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white text-base transition-all">
+                                    <option value="">جميع الصفوف</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم قائمة الطلاب -->
+        <section class="fade-in" id="studentsSection">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">قائمة الطلاب</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">عرض وإدارة جميع الطلاب المسجلين</p>
+                        </div>
+                        <div class="flex items-center space-x-reverse space-x-2">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">العدد:</span>
+                            <span class="px-3 py-1 bg-primary text-white rounded-full text-sm font-medium" id="studentsCount">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="studentsList" class="p-6">
+                    <!-- سيتم ملؤه بـ JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- مودال إضافة طالب -->
+    <div id="addStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto slide-up">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">إضافة طالب جديد</h3>
+            </div>
+            <form id="addStudentForm" class="p-6 space-y-4">
+                <div>
+                    <label for="studentName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">اسم الطالب</label>
+                    <input type="text" id="studentName" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white text-base">
+                </div>
+                <div>
+                    <label for="studentGrade" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">الصف</label>
+                    <select id="studentGrade" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white text-base">
+                        <option value="">اختر الصف</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="parentPhone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">رقم هاتف ولي الأمر</label>
+                    <input type="tel" id="parentPhone" placeholder="966501234567" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white text-base">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">مثال: 966501234567 (لإرسال رسائل الواتساب)</p>
+                </div>
+                <div class="flex justify-end space-x-reverse space-x-3 pt-4">
+                    <button type="button" onclick="closeAddStudentModal()" class="px-6 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">إلغاء</button>
+                    <button type="submit" class="px-6 py-3 bg-primary hover:bg-purple-700 text-white rounded-lg transition-colors">إضافة الطالب</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- مودال تقييم الطالب -->
+    <div id="evaluateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto slide-up">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">تقييم طالب</h3>
+            </div>
+            <form id="evaluateForm" class="p-6 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="evaluateStudent" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">اختر الطالب</label>
+                        <select id="evaluateStudent" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white text-base">
+                            <option value="">اختر طالب</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="evaluateSubject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">المادة</label>
+                        <select id="evaluateSubject" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white text-base">
+                            <option value="">اختر المادة</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">التقييم</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <label class="flex items-center space-x-reverse space-x-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" name="evaluation" value="ممتاز" class="text-primary focus:ring-primary" required>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">ممتاز</span>
+                        </label>
+                        <label class="flex items-center space-x-reverse space-x-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" name="evaluation" value="جيد جداً" class="text-primary focus:ring-primary">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">جيد جداً</span>
+                        </label>
+                        <label class="flex items-center space-x-reverse space-x-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" name="evaluation" value="جيد" class="text-primary focus:ring-primary">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">جيد</span>
+                        </label>
+                        <label class="flex items-center space-x-reverse space-x-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" name="evaluation" value="مقبول" class="text-primary focus:ring-primary">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">مقبول</span>
+                        </label>
+                        <label class="flex items-center space-x-reverse space-x-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" name="evaluation" value="مقصر" class="text-primary focus:ring-primary">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">مقصر</span>
+                        </label>
+                        <label class="flex items-center space-x-reverse space-x-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" name="evaluation" value="حافظ" class="text-primary focus:ring-primary">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">حافظ</span>
+                        </label>
+                        <label class="flex items-center space-x-reverse space-x-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                            <input type="radio" name="evaluation" value="لم يحفظ" class="text-primary focus:ring-primary">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">لم يحفظ</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="evaluateNotes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ملاحظات إضافية (اختياري)</label>
+                    <textarea id="evaluateNotes" rows="3" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white text-base" placeholder="أضف أي ملاحظات إضافية..."></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-reverse space-x-3 pt-4">
+                    <button type="button" onclick="closeEvaluateModal()" class="px-6 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">إلغاء</button>
+                    <button type="submit" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">حفظ التقييم</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- مودال الإحصائيات -->
+    <div id="statsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto slide-up">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">الإحصائيات العامة</h3>
+                <button onclick="closeStatsModal()" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="statsContent" class="p-6">
+                <!-- سيتم ملؤه بـ JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال تفاصيل الطالب -->
+    <div id="studentDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto slide-up">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="studentDetailsTitle">تفاصيل الطالب</h3>
+                <div class="flex space-x-reverse space-x-2">
+                    <button id="sendWhatsAppBtn" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors flex items-center space-x-reverse space-x-2" style="display: none;">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.886 3.75"/>
+                        </svg>
+                        <span>إرسال واتساب</span>
+                    </button>
+                    <button onclick="closeStudentDetailsModal()" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="studentDetailsContent" class="p-6">
+                <!-- سيتم ملؤه بـ JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // إعداد الوضع المظلم
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // بيانات النظام
+        const grades = [
+            'أول ابتدائي', 'ثاني ابتدائي', 'ثالث ابتدائي', 'رابع ابتدائي', 'خامس ابتدائي', 'سادس ابتدائي',
+            'أول متوسط', 'ثاني متوسط', 'ثالث متوسط',
+            'أول ثانوي', 'ثاني ثانوي', 'ثالث ثانوي'
+        ];
+
+        const subjects = [
+            'القرآن الكريم', 'التفسير', 'الحديث', 'التوحيد', 'الفقه',
+            'اللغة العربية', 'الرياضيات', 'العلوم', 'الدراسات الاجتماعية',
+            'اللغة الإنجليزية', 'التربية البدنية', 'التربية الفنية', 'الحاسوب'
+        ];
+
+        // متغيرات النظام
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        let evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+
+        // تهيئة النظام
+        function initializeApp() {
+            updateCurrentDate();
+            populateGrades();
+            populateSubjects();
+            populateStudentDropdown();
+            renderStudentsList();
+            updateDashboardStats();
+            updateNotificationBadge();
+            setupEventListeners();
+        }
+
+        // تحديث التاريخ الحالي
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('ar-SA', options);
+        }
+
+        // ملء قائمة الصفوف
+        function populateGrades() {
+            const gradeSelects = [
+                document.getElementById('studentGrade'),
+                document.getElementById('filterGrade')
+            ];
+            
+            gradeSelects.forEach(select => {
+                if (select) {
+                    // مسح القيم السابقة عدا الخيار الأول
+                    while (select.children.length > 1) {
+                        select.removeChild(select.lastChild);
+                    }
+                    
+                    grades.forEach(grade => {
+                        const option = document.createElement('option');
+                        option.value = grade;
+                        option.textContent = grade;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        // ملء قائمة المواد
+        function populateSubjects() {
+            const subjectSelect = document.getElementById('evaluateSubject');
+            if (subjectSelect) {
+                // مسح القيم السابقة عدا الخيار الأول
+                while (subjectSelect.children.length > 1) {
+                    subjectSelect.removeChild(subjectSelect.lastChild);
+                }
+                
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject;
+                    option.textContent = subject;
+                    subjectSelect.appendChild(option);
+                });
+            }
+        }
+
+        // ملء قائمة الطلاب
+        function populateStudentDropdown() {
+            const studentSelect = document.getElementById('evaluateStudent');
+            if (studentSelect) {
+                studentSelect.innerHTML = '<option value="">اختر طالب</option>';
+                
+                students.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = `${student.name} - ${student.grade}`;
+                    studentSelect.appendChild(option);
+                });
+            }
+        }
+
+        // عرض قائمة الطلاب
+        function renderStudentsList() {
+            const container = document.getElementById('studentsList');
+            const studentsCountEl = document.getElementById('studentsCount');
+            const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
+            const gradeFilter = document.getElementById('filterGrade').value;
+            
+            let filteredStudents = students.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm);
+                const matchesGrade = !gradeFilter || student.grade === gradeFilter;
+                return matchesSearch && matchesGrade;
+            });
+
+            if (studentsCountEl) {
+                studentsCountEl.textContent = filteredStudents.length;
+            }
+
+            if (!container) return;
+
+            if (filteredStudents.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16">
+                        <div class="w-20 h-20 mx-auto bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-2">${students.length === 0 ? 'لا توجد طلاب مسجلين' : 'لا توجد نتائج للبحث'}</h4>
+                        <p class="text-gray-500 dark:text-gray-400 mb-6">${students.length === 0 ? 'ابدأ بإضافة طلاب جدد لاستخدام النظام' : 'جرب تغيير معايير البحث'}</p>
+                        ${students.length === 0 ? `
+                            <button onclick="openAddStudentModal()" class="inline-flex items-center px-4 py-2 bg-primary hover:bg-purple-700 text-white rounded-lg transition-colors space-x-reverse space-x-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                <span>إضافة أول طالب</span>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${filteredStudents.map(student => createStudentCard(student)).join('')}
+                </div>
+            `;
+        }
+
+        // إنشاء بطاقة طالب
+        function createStudentCard(student) {
+            const recentEvaluations = getRecentEvaluations(student.id, 5);
+            const lastEvaluation = recentEvaluations[0];
+            const averageScore = calculateAverageScore(student.id);
+            
+            return `
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600 hover:shadow-lg transition-all duration-200 cursor-pointer fade-in group hover-scale" onclick="showStudentDetails('${student.id}')">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-reverse space-x-3">
+                            <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-lg">${student.name.charAt(0)}</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">${student.name}</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${student.grade}</p>
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <p class="text-lg font-bold text-gray-900 dark:text-white">${averageScore.toFixed(1)}%</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">المعدل العام</p>
+                        </div>
+                    </div>
+                    
+                    ${lastEvaluation ? `
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 border border-gray-100 dark:border-gray-600">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">آخر تقييم:</p>
+                                <span class="px-2 py-1 rounded-full text-xs font-medium ${getEvaluationColorClass(lastEvaluation.evaluation)}">${lastEvaluation.evaluation}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-gray-900 dark:text-white">${lastEvaluation.subject}</span>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">${formatDate(lastEvaluation.date)}</p>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 text-center border border-gray-100 dark:border-gray-600">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">لا توجد تقييمات حتى الآن</p>
+                        </div>
+                    `}
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-reverse space-x-1">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">${recentEvaluations.length}</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">تقييم</span>
+                        </div>
+                        <div class="flex space-x-reverse space-x-2">
+                            <button onclick="event.stopPropagation(); quickEvaluate('${student.id}')" class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded transition-colors">
+                                تقييم
+                            </button>
+                            <button onclick="event.stopPropagation(); deleteStudent('${student.id}')" class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors">
+                                حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // الحصول على التقييمات الأخيرة
+        function getRecentEvaluations(studentId, limit = 10) {
+            return evaluations
+                .filter(evaluation => evaluation.studentId === studentId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, limit);
+        }
+
+        // حساب المعدل العام
+        function calculateAverageScore(studentId) {
+            const studentEvaluations = evaluations.filter(evaluation => evaluation.studentId === studentId);
+            if (studentEvaluations.length === 0) return 0;
+
+            const scoreMap = {
+                'ممتاز': 100,
+                'جيد جداً': 85,
+                'جيد': 75,
+                'مقبول': 65,
+                'حافظ': 90,
+                'مقصر': 40,
+                'لم يحفظ': 20
+            };
+
+            const totalScore = studentEvaluations.reduce((sum, evaluation) => {
+                return sum + (scoreMap[evaluation.evaluation] || 0);
+            }, 0);
+
+            return totalScore / studentEvaluations.length;
+        }
+
+        // الحصول على فئة اللون للتقييم
+        function getEvaluationColorClass(evaluation) {
+            const colorMap = {
+                'ممتاز': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                'جيد جداً': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                'جيد': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                'مقبول': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+                'حافظ': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                'مقصر': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                'لم يحفظ': 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+            };
+            return colorMap[evaluation] || 'bg-gray-100 text-gray-800';
+        }
+
+        // تنسيق التاريخ
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ar-SA', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // تحديث إحصائيات لوحة القيادة
+        function updateDashboardStats() {
+            const today = new Date().toDateString();
+            const todayEvaluations = evaluations.filter(evaluation => 
+                new Date(evaluation.date).toDateString() === today
+            ).length;
+
+            const excellentStudents = students.filter(student => {
+                const avg = calculateAverageScore(student.id);
+                return avg >= 85;
+            }).length;
+
+            const needsAttentionStudents = students.filter(student => {
+                const avg = calculateAverageScore(student.id);
+                return avg < 65;
+            }).length;
+
+            const totalStudentsEl = document.getElementById('totalStudents');
+            const todayEvaluationsEl = document.getElementById('todayEvaluations');
+            const excellentStudentsEl = document.getElementById('excellentStudents');
+            const needsAttentionEl = document.getElementById('needsAttention');
+
+            if (totalStudentsEl) totalStudentsEl.textContent = students.length;
+            if (todayEvaluationsEl) todayEvaluationsEl.textContent = todayEvaluations;
+            if (excellentStudentsEl) excellentStudentsEl.textContent = excellentStudents;
+            if (needsAttentionEl) needsAttentionEl.textContent = needsAttentionStudents;
+        }
+
+        // تحديث شارة الإشعارات
+        function updateNotificationBadge() {
+            const today = new Date().toDateString();
+            const todayCount = evaluations.filter(evaluation => 
+                new Date(evaluation.date).toDateString() === today
+            ).length;
+            
+            const badge = document.getElementById('notificationBadge');
+            if (badge) {
+                badge.textContent = todayCount;
+                if (todayCount === 0) {
+                    badge.classList.add('hidden');
+                } else {
+                    badge.classList.remove('hidden');
+                }
+            }
+        }
+
+        // وظائف إدارة المودالات
+        function openAddStudentModal() {
+            closeMobileMenu();
+            const modal = document.getElementById('addStudentModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeAddStudentModal() {
+            const modal = document.getElementById('addStudentModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function openEvaluateModal() {
+            closeMobileMenu();
+            const modal = document.getElementById('evaluateModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeEvaluateModal() {
+            const modal = document.getElementById('evaluateModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function showStats() {
+            closeMobileMenu();
+            generateStatsContent();
+            const modal = document.getElementById('statsModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeStatsModal() {
+            const modal = document.getElementById('statsModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function showStudentDetails(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            const studentEvaluations = getRecentEvaluations(studentId);
+            const averageScore = calculateAverageScore(studentId);
+            
+            const titleEl = document.getElementById('studentDetailsTitle');
+            if (titleEl) {
+                titleEl.textContent = `تفاصيل الطالب: ${student.name}`;
+            }
+            
+            const content = document.getElementById('studentDetailsContent');
+            if (content) {
+                content.innerHTML = generateStudentDetailsContent(student, studentEvaluations, averageScore);
+            }
+            
+            // إعداد زر الواتساب
+            const whatsappBtn = document.getElementById('sendWhatsAppBtn');
+            if (student.parentPhone && whatsappBtn) {
+                whatsappBtn.style.display = 'flex';
+                whatsappBtn.onclick = () => sendWhatsAppMessage(student);
+            } else if (whatsappBtn) {
+                whatsappBtn.style.display = 'none';
+            }
+            
+            const modal = document.getElementById('studentDetailsModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeStudentDetailsModal() {
+            const modal = document.getElementById('studentDetailsModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) {
+                mobileMenu.classList.add('hidden');
+            }
+        }
+
+        // التمرير إلى قائمة الطلاب
+        function scrollToStudentsList() {
+            const section = document.getElementById('studentsSection');
+            if (section) {
+                section.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }
+
+        // توليد محتوى تفاصيل الطالب
+        function generateStudentDetailsContent(student, studentEvaluations, averageScore) {
+            return `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- معلومات الطالب -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                            <div class="text-center mb-6">
+                                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span class="text-white font-bold text-2xl">${student.name.charAt(0)}</span>
+                                </div>
+                                <h2 class="text-xl font-bold text-gray-900 dark:text-white">${student.name}</h2>
+                                <p class="text-gray-600 dark:text-gray-400">${student.grade}</p>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="text-center">
+                                    <p class="text-3xl font-bold text-primary">${averageScore.toFixed(1)}%</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">المعدل العام</p>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 text-center">
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-900 dark:text-white">${studentEvaluations.length}</p>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400">إجمالي التقييمات</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-900 dark:text-white">${getUniqueSubjects(student.id).length}</p>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400">المواد المقيمة</p>
+                                    </div>
+                                </div>
+                                
+                                ${student.parentPhone ? `
+                                    <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">هاتف ولي الأمر:</p>
+                                        <p class="font-medium text-gray-900 dark:text-white">${student.parentPhone}</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- التقييمات والإحصائيات -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">أحدث التقييمات</h3>
+                            <div class="space-y-3 max-h-96 overflow-y-auto">
+                                ${studentEvaluations.length > 0 ? 
+                                    studentEvaluations.map(evaluation => `
+                                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <h4 class="font-medium text-gray-900 dark:text-white">${evaluation.subject}</h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">${formatDate(evaluation.date)}</p>
+                                                </div>
+                                                <span class="px-3 py-1 rounded-full text-sm font-medium ${getEvaluationColorClass(evaluation.evaluation)}">${evaluation.evaluation}</span>
+                                            </div>
+                                            ${evaluation.notes ? `<p class="text-sm text-gray-600 dark:text-gray-400 mt-2">${evaluation.notes}</p>` : ''}
+                                        </div>
+                                    `).join('') 
+                                    : '<p class="text-center text-gray-500 dark:text-gray-400 py-8">لا توجد تقييمات حتى الآن</p>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // الحصول على المواد الفريدة للطالب
+        function getUniqueSubjects(studentId) {
+            const studentEvals = evaluations.filter(evaluation => evaluation.studentId === studentId);
+            return [...new Set(studentEvals.map(evaluation => evaluation.subject))];
+        }
+
+        // توليد محتوى الإحصائيات
+        function generateStatsContent() {
+            const content = document.getElementById('statsContent');
+            if (!content) return;
+
+            const totalEvaluations = evaluations.length;
+            const uniqueSubjects = [...new Set(evaluations.map(evaluation => evaluation.subject))];
+            const averageSystemScore = students.length > 0 ? 
+                students.reduce((sum, student) => sum + calculateAverageScore(student.id), 0) / students.length : 0;
+
+            // إحصائيات التقييمات
+            const evaluationStats = {};
+            evaluations.forEach(evaluation => {
+                evaluationStats[evaluation.evaluation] = (evaluationStats[evaluation.evaluation] || 0) + 1;
+            });
+
+            // إحصائيات المواد
+            const subjectStats = {};
+            evaluations.forEach(evaluation => {
+                subjectStats[evaluation.subject] = (subjectStats[evaluation.subject] || 0) + 1;
+            });
+
+            content.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- الإحصائيات العامة -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">إحصائيات عامة</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-primary">${students.length}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">إجمالي الطلاب</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-green-600">${totalEvaluations}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">إجمالي التقييمات</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-blue-600">${uniqueSubjects.length}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">المواد المقيمة</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-purple-600">${averageSystemScore.toFixed(1)}%</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">المعدل العام للنظام</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- توزيع التقييمات -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">توزيع التقييمات</h3>
+                        <div class="space-y-3">
+                            ${Object.entries(evaluationStats).map(([evaluation, count]) => `
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-700 dark:text-gray-300">${evaluation}</span>
+                                    <div class="flex items-center space-x-reverse space-x-2">
+                                        <span class="text-lg font-semibold text-gray-900 dark:text-white">${count}</span>
+                                        <div class="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                            <div class="bg-primary h-2 rounded-full" style="width: ${totalEvaluations > 0 ? (count / totalEvaluations) * 100 : 0}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- أفضل الطلاب -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">أفضل الطلاب</h3>
+                        <div class="space-y-3">
+                            ${students
+                                .sort((a, b) => calculateAverageScore(b.id) - calculateAverageScore(a.id))
+                                .slice(0, 5)
+                                .map((student, index) => `
+                                    <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
+                                        <div class="flex items-center space-x-reverse space-x-3">
+                                            <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">${index + 1}</span>
+                                            <div>
+                                                <p class="font-medium text-gray-900 dark:text-white">${student.name}</p>
+                                                <p class="text-sm text-gray-600 dark:text-gray-400">${student.grade}</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-lg font-bold text-primary">${calculateAverageScore(student.id).toFixed(1)}%</span>
+                                    </div>
+                                `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- المواد الأكثر تقييماً -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">المواد الأكثر تقييماً</h3>
+                        <div class="space-y-3">
+                            ${Object.entries(subjectStats)
+                                .sort(([,a], [,b]) => b - a)
+                                .slice(0, 5)
+                                .map(([subject, count]) => `
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-700 dark:text-gray-300">${subject}</span>
+                                        <div class="flex items-center space-x-reverse space-x-2">
+                                            <span class="text-lg font-semibold text-gray-900 dark:text-white">${count}</span>
+                                            <div class="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                                <div class="bg-green-500 h-2 rounded-full" style="width: ${totalEvaluations > 0 ? (count / totalEvaluations) * 100 : 0}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // إضافة طالب جديد
+        function addStudent(name, grade, parentPhone) {
+            const newStudent = {
+                id: Date.now().toString(),
+                name,
+                grade,
+                parentPhone,
+                createdAt: new Date().toISOString()
+            };
+            
+            students.push(newStudent);
+            localStorage.setItem('students', JSON.stringify(students));
+            
+            populateStudentDropdown();
+            renderStudentsList();
+            updateDashboardStats();
+            showNotification('تم إضافة الطالب بنجاح', 'success');
+        }
+
+        // إضافة تقييم
+        function addEvaluation(studentId, subject, evaluation, notes) {
+            const newEvaluation = {
+                id: Date.now().toString(),
+                studentId,
+                subject,
+                evaluation,
+                notes,
+                date: new Date().toISOString()
+            };
+            
+            evaluations.push(newEvaluation);
+            localStorage.setItem('evaluations', JSON.stringify(evaluations));
+            
+            renderStudentsList();
+            updateDashboardStats();
+            updateNotificationBadge();
+            showNotification('تم إضافة التقييم بنجاح', 'success');
+        }
+
+        // تقييم سريع
+        function quickEvaluate(studentId) {
+            const studentSelect = document.getElementById('evaluateStudent');
+            if (studentSelect) {
+                studentSelect.value = studentId;
+            }
+            openEvaluateModal();
+        }
+
+        // حذف طالب
+        function deleteStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            if (confirm(`هل أنت متأكد من حذف الطالب "${student.name}"؟ سيتم حذف جميع تقييماته أيضاً.`)) {
+                // حذف الطالب
+                students = students.filter(s => s.id !== studentId);
+                // حذف تقييمات الطالب
+                evaluations = evaluations.filter(e => e.studentId !== studentId);
+                
+                // حفظ البيانات
+                localStorage.setItem('students', JSON.stringify(students));
+                localStorage.setItem('evaluations', JSON.stringify(evaluations));
+                
+                // تحديث الواجهة
+                populateStudentDropdown();
+                renderStudentsList();
+                updateDashboardStats();
+                updateNotificationBadge();
+                
+                showNotification('تم حذف الطالب بنجاح', 'success');
+            }
+        }
+
+        // إرسال رسالة واتساب
+        function sendWhatsAppMessage(student) {
+            const recentEvals = getRecentEvaluations(student.id, 5);
+            const averageScore = calculateAverageScore(student.id);
+            
+            let message = `*تقرير تقدم الطالب/ة: ${student.name}*\n`;
+            message += `الصف: ${student.grade}\n`;
+            message += `المعدل العام: ${averageScore.toFixed(1)}%\n\n`;
+            
+            if (recentEvals.length > 0) {
+                message += `*أحدث التقييمات:*\n`;
+                recentEvals.slice(0, 3).forEach(evaluation => {
+                    message += `• ${evaluation.subject}: ${evaluation.evaluation} (${formatDate(evaluation.date)})\n`;
+                });
+            } else {
+                message += `لم يتم تقييم الطالب/ة حتى الآن.\n`;
+            }
+            
+            message += `\n_تم إرسال هذا التقرير من نظام متابعة تقدم الطالب_`;
+            
+            const phoneNumber = student.parentPhone.replace(/[^\d]/g, '');
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // عرض الطلاب المتميزين
+        function showTopStudents() {
+            const topStudents = students
+                .filter(student => calculateAverageScore(student.id) >= 85)
+                .sort((a, b) => calculateAverageScore(b.id) - calculateAverageScore(a.id));
+            
+            if (topStudents.length === 0) {
+                showNotification('لا يوجد طلاب متميزين حالياً', 'info');
+                return;
+            }
+
+            createDynamicModal('الطلاب المتميزون', `
+                <div class="space-y-4">
+                    ${topStudents.map((student, index) => `
+                        <div class="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                            <div class="flex items-center space-x-reverse space-x-3">
+                                <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                                    ${index + 1}
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">${student.name}</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">${student.grade}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">${calculateAverageScore(student.id).toFixed(1)}%</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">المعدل العام</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `);
+        }
+
+        // عرض تقييمات اليوم
+        function showTodayEvaluations() {
+            const today = new Date().toDateString();
+            const todayEvals = evaluations.filter(evaluation => 
+                new Date(evaluation.date).toDateString() === today
+            );
+
+            if (todayEvals.length === 0) {
+                showNotification('لا توجد تقييمات اليوم', 'info');
+                return;
+            }
+
+            createDynamicModal(`تقييمات اليوم (${todayEvals.length})`, `
+                <div class="space-y-3">
+                    ${todayEvals.map(evaluation => {
+                        const student = students.find(s => s.id === evaluation.studentId);
+                        return `
+                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-reverse space-x-3">
+                                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                                        <span class="text-white font-bold">${student ? student.name.charAt(0) : '؟'}</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-900 dark:text-white">${student ? student.name : 'طالب محذوف'}</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">${evaluation.subject}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="px-3 py-1 rounded-full text-sm font-medium ${getEvaluationColorClass(evaluation.evaluation)}">${evaluation.evaluation}</span>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${new Date(evaluation.date).toLocaleTimeString('ar-SA', {hour: '2-digit', minute: '2-digit'})}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `);
+        }
+
+        // عرض التقييمات الأخيرة
+        function showRecentEvaluations() {
+            const recentEvals = evaluations
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 20);
+
+            if (recentEvals.length === 0) {
+                showNotification('لا توجد تقييمات', 'info');
+                return;
+            }
+
+            createDynamicModal('آخر 20 تقييم', `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${recentEvals.map(evaluation => {
+                        const student = students.find(s => s.id === evaluation.studentId);
+                        return `
+                            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-reverse space-x-2">
+                                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-sm">${student ? student.name.charAt(0) : '؟'}</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium text-gray-900 dark:text-white text-sm">${student ? student.name : 'طالب محذوف'}</h4>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">${student ? student.grade : ''}</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium ${getEvaluationColorClass(evaluation.evaluation)}">${evaluation.evaluation}</span>
+                                </div>
+                                <div class="text-sm">
+                                    <p class="font-medium text-gray-900 dark:text-white">${evaluation.subject}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">${formatDate(evaluation.date)}</p>
+                                    ${evaluation.notes ? `<p class="text-xs text-gray-600 dark:text-gray-400 mt-1">${evaluation.notes}</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `);
+        }
+
+        // توليد تقرير الأداء
+        function generatePerformanceReport() {
+            showNotification('جاري إنشاء تقرير الأداء...', 'info');
+            
+            const reportData = {
+                totalStudents: students.length,
+                totalEvaluations: evaluations.length,
+                averageScore: students.length > 0 ? 
+                    students.reduce((sum, student) => sum + calculateAverageScore(student.id), 0) / students.length : 0,
+                topPerformers: students
+                    .sort((a, b) => calculateAverageScore(b.id) - calculateAverageScore(a.id))
+                    .slice(0, 5),
+                subjectStats: {}
+            };
+
+            // إحصائيات المواد
+            subjects.forEach(subject => {
+                const subjectEvals = evaluations.filter(e => e.subject === subject);
+                if (subjectEvals.length > 0) {
+                    const avg = subjectEvals.reduce((sum, e) => {
+                        const scoreMap = {'ممتاز': 100, 'جيد جداً': 85, 'جيد': 75, 'مقبول': 65, 'حافظ': 90, 'مقصر': 40, 'لم يحفظ': 20};
+                        return sum + (scoreMap[e.evaluation] || 0);
+                    }, 0) / subjectEvals.length;
+                    reportData.subjectStats[subject] = {
+                        count: subjectEvals.length,
+                        average: avg
+                    };
+                }
+            });
+
+            const reportText = `
+تقرير الأداء العام
+==================
+
+📊 إحصائيات عامة:
+• إجمالي الطلاب: ${reportData.totalStudents}
+• إجمالي التقييمات: ${reportData.totalEvaluations}
+• المعدل العام: ${reportData.averageScore.toFixed(1)}%
+
+🏆 أفضل 5 طلاب:
+${reportData.topPerformers.map((student, index) => 
+    `${index + 1}. ${student.name} (${calculateAverageScore(student.id).toFixed(1)}%)`
+).join('\n')}
+
+📚 إحصائيات المواد:
+${Object.entries(reportData.subjectStats).map(([subject, stats]) => 
+    `• ${subject}: ${stats.count} تقييم، المعدل: ${stats.average.toFixed(1)}%`
+).join('\n')}
+
+تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}
+            `;
+
+            downloadTextFile(reportText, `تقرير-الأداء-${new Date().toISOString().split('T')[0]}.txt`);
+            showNotification('تم إنشاء تقرير الأداء بنجاح', 'success');
+        }
+
+        // تصدير جميع البيانات
+        function exportAllData() {
+            const data = {
+                students,
+                evaluations,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `student-progress-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('تم تصدير البيانات بنجاح', 'success');
+        }
+
+        // تنزيل ملف نصي
+        function downloadTextFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // إنشاء مودال ديناميكي
+        function createDynamicModal(title, content) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto slide-up">
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${title}</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        ${content}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // عرض لوحة الإشعارات
+        function showNotificationsPanel() {
+            const today = new Date().toDateString();
+            const todayEvals = evaluations.filter(evaluation => 
+                new Date(evaluation.date).toDateString() === today
+            );
+
+            if (todayEvals.length === 0) {
+                showNotification('لا توجد إشعارات جديدة', 'info');
+                return;
+            }
+
+            showTodayEvaluations();
+        }
+
+        // عرض الإعدادات
+        function showSettings() {
+            createDynamicModal('إعدادات النظام', `
+                <div class="space-y-6">
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">النسخ الاحتياطي</h4>
+                        <p class="text-sm text-blue-600 dark:text-blue-300 mb-4">احتفظ بنسخة احتياطية من بياناتك.</p>
+                        
+                        <div class="space-y-3">
+                            <button onclick="exportAllData()" class="w-full flex items-center justify-center space-x-reverse space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>تصدير البيانات</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">منطقة الخطر</h4>
+                        <p class="text-sm text-red-600 dark:text-red-300 mb-4">هذه الإجراءات لا يمكن التراجع عنها. تأكد من رغبتك قبل المتابعة.</p>
+                        
+                        <div class="space-y-3">
+                            <button onclick="clearAllData()" class="w-full flex items-center justify-center space-x-reverse space-x-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                                <span>مسح جميع البيانات</span>
+                            </button>
+                            
+                            <div class="text-xs text-red-500 dark:text-red-400">
+                                سيتم حذف جميع الطلاب والتقييمات نهائياً
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        // مسح جميع البيانات
+        function clearAllData() {
+            if (confirm('هل أنت متأكد من مسح جميع البيانات؟ سيتم حذف جميع الطلاب والتقييمات نهائياً ولا يمكن استرجاعها.')) {
+                students = [];
+                evaluations = [];
+                
+                localStorage.removeItem('students');
+                localStorage.removeItem('evaluations');
+                
+                populateStudentDropdown();
+                renderStudentsList();
+                updateDashboardStats();
+                updateNotificationBadge();
+                
+                // إغلاق جميع المودالات
+                document.querySelectorAll('.fixed').forEach(modal => {
+                    modal.remove();
+                });
+                
+                showNotification('تم مسح جميع البيانات بنجاح', 'success');
+            }
+        }
+
+        // عرض إشعار
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 fade-in`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // قائمة الجوال
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    if (mobileMenu) {
+                        if (mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.remove('hidden');
+                        } else {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            }
+
+            // إغلاق المودالات عند النقر على الخلفية
+            const modals = ['addStudentModal', 'evaluateModal', 'statsModal', 'studentDetailsModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.classList.add('hidden');
+                            modal.classList.remove('flex');
+                        }
+                    });
+                }
+            });
+
+            // نموذج إضافة طالب
+            const addStudentForm = document.getElementById('addStudentForm');
+            if (addStudentForm) {
+                addStudentForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('studentName').value.trim();
+                    const grade = document.getElementById('studentGrade').value;
+                    const parentPhone = document.getElementById('parentPhone').value.trim();
+
+                    if (name && grade) {
+                        addStudent(name, grade, parentPhone);
+                        addStudentForm.reset();
+                        closeAddStudentModal();
+                    }
+                });
+            }
+
+            // نموذج التقييم
+            const evaluateForm = document.getElementById('evaluateForm');
+            if (evaluateForm) {
+                evaluateForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const studentId = document.getElementById('evaluateStudent').value;
+                    const subject = document.getElementById('evaluateSubject').value;
+                    const evaluation = document.querySelector('input[name="evaluation"]:checked')?.value;
+                    const notes = document.getElementById('evaluateNotes').value.trim();
+
+                    if (studentId && subject && evaluation) {
+                        addEvaluation(studentId, subject, evaluation, notes);
+                        evaluateForm.reset();
+                        closeEvaluateModal();
+                    }
+                });
+            }
+
+            // البحث والتصفية
+            const searchInput = document.getElementById('searchStudent');
+            const filterSelect = document.getElementById('filterGrade');
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', renderStudentsList);
+            }
+            if (filterSelect) {
+                filterSelect.addEventListener('change', renderStudentsList);
+            }
+        }
+
+        // تشغيل التطبيق
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+    </script>
+<script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(err => console.log('SW registration failed:', err));
+      });
+    }
+    </script>
+</body>
+</html>
