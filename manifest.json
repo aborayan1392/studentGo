@@ -3,7 +3,7 @@
   "short_name": "تقدم الطالب",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "index.html",
+  "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "orientation": "portrait",
