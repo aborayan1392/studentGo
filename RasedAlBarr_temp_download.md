@@ -1,0 +1,5 @@
+# Temporary Rased AlBarr APK transfer
+
+[Download temporary APK](https://release-assets.githubusercontent.com/github-production-release-asset/1299970765/8d495511-a706-4cf4-a7ee-89f8bd449c49?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-08-10T22%3A46%3A17Z&rscd=attachment%3B+filename%3DRasedAlBarr-v1.0.8-unsigned.apk&rsct=application%2Fvnd.android.package-archive&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-08-10T21%3A46%3A14Z&ske=2026-08-10T22%3A46%3A17Z&sks=b&skv=2018-11-09&sig=dve33CUXUXh10q3327T9USkKKA6dylY2q9h5YKkVrz8%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4NjQwMDIyOCwibmJmIjoxNzg2Mzk5OTI4LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.OqC9hSjtky8_BgH2dYmKZk29D4Nd3VQ-Jg0AqqxBAIc&response-content-disposition=attachment%3B%20filename%3DRasedAlBarr-v1.0.8-unsigned.apk&response-content-type=application%2Fvnd.android.package-archive)
+
+This link is temporary and will be removed after transfer.
