@@ -1,0 +1,1 @@
+Preparing a build source asset path.
