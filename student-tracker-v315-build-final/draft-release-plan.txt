@@ -1,0 +1,1 @@
+Build source will be attached to a draft release if connector supports assets.
