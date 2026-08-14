@@ -13,28 +13,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
       - name: Set up Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-
       - name: Reconstruct v3.1.5 source archive
         shell: bash
         run: |
           set -euxo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import base64
+          import base64, hashlib
           root = Path('v315build')
           b64 = ''
-          for n in range(7):
+          for n in range(3):
+              b64 += (root / f'source_{n:02d}').read_text().strip()
+          for n in range(8):
+              b64 += (root / f'source_03p{n}').read_text().strip()
+          for n in range(4, 7):
               b64 += (root / f'source_{n:02d}').read_text().strip()
           for name in ['source_07d0','source_07d1','source_07d20','source_07d21','source_07d30','source_07d31']:
               raw = (root / name).read_text().strip()
@@ -42,8 +43,11 @@ jobs:
           for n in [8, 9, 10]:
               b64 += (root / f'source_{n:02d}').read_text().strip()
           data = base64.b64decode(b64, validate=True)
-          Path('source.tar.xz').write_bytes(data)
+          digest = hashlib.sha256(data).hexdigest()
           print('archive bytes:', len(data))
+          print('archive sha256:', digest)
+          assert digest == '94f171a9de2f0d96f4f166329d67be5567dbe43ceb335f2b1e45e8b3a4243d84'
+          Path('source.tar.xz').write_bytes(data)
           PY
           xz -t source.tar.xz
           mkdir -p project
@@ -54,14 +58,12 @@ jobs:
           echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
           grep -q "versionName '3.1.5'" "$PROJECT_DIR/app/build.gradle"
           grep -q "versionCode 27" "$PROJECT_DIR/app/build.gradle"
-
       - name: Install Android SDK 35
         shell: bash
         run: |
           set -euxo pipefail
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
-
       - name: Build debug APK
         shell: bash
         run: |
@@ -72,7 +74,6 @@ jobs:
           cp "$APK" StudentTrackerNative-v3.1.5.apk
           unzip -t StudentTrackerNative-v3.1.5.apk >/dev/null
           sha256sum StudentTrackerNative-v3.1.5.apk
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
